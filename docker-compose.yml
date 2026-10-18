@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  
+  redis:
+    image: redis:alpine
+    container_name: redis_surge_db
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: .
+    container_name: fastapi_surge_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    container_name: streamlit_surge_dashboard
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+    environment:
+      - API_URL=http://backend:8000
