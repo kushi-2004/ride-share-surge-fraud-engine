@@ -8,7 +8,6 @@ import math
 
 app = FastAPI(title="Ride-Share Surge & Fraud Engine")
 
-# Redis Connection
 r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
 class DriverPing(BaseModel):
@@ -20,17 +19,13 @@ class DriverPing(BaseModel):
 @app.post("/driver/ping")
 def receive_driver_ping(ping: DriverPing):
     try:
-        # H3 Index ගණනය කිරීම
         h3_cell = get_h3_index(ping.latitude, ping.longitude)
 
-        # Redis Key එකක් සාදා තැබීම
         redis_key = f"driver:{ping.driver_id}:location"
         prev_data = r.hgetall(redis_key)
-        
-        # 🟢 සියලුම driversලාගේ IDs save කර තබා ගැනීමට Set එකක් භාවිත කිරීම
+    
         r.sadd("all_drivers", ping.driver_id)
 
-        # Fraud Check (GPS Spoofing)
         if prev_data:
             prev_lat = float(prev_data["lat"])
             prev_lng = float(prev_data["lng"])
@@ -50,7 +45,6 @@ def receive_driver_ping(ping: DriverPing):
                 })
                 return {"status": "FLAGGED", "reason": "GPS Spoofing / Teleportation Detected", "calculated_speed_kmh": speed}
 
-        # සාමාන්‍ය VALID තත්ත්වය save කිරීම
         r.hset(redis_key, mapping={
             "lat": ping.latitude,
             "lng": ping.longitude,
@@ -88,7 +82,6 @@ def get_ml_predicted_surge(hour: int, is_weekend: int, weather: int, supply: int
     }
 
 def calculate_distance(lat1, lon1, lat2, lon2):
-    # Haversine formula මඟින් km වලින් දුර ගණනය කිරීම
     R = 6371.0
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
@@ -113,8 +106,7 @@ def get_nearby_drivers(lat: float, lon: float, radius_km: float = 10.0):
                 status = d_data.get(b"status", d_data.get("status", b"VALID"))
                 if isinstance(status, bytes):
                     status = status.decode('utf-8')
-                
-                # Fraud නොවූ active driversලා පමණක් සැලකීම
+               
                 if status == "VALID":
                     dist = calculate_distance(lat, lon, d_lat, d_lon)
                     if dist <= radius_km:

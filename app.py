@@ -7,26 +7,18 @@ import datetime
 import streamlit as st
 import pydeck as pdk
 
-# Page Configuration
 st.set_page_config(
     page_title="Ride-Share Surge & Fraud Engine",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS Styling
-# Custom CSS Styling (Dark City Background + Clean UI)
-# Custom CSS Styling (Forcing Background Image)
-# Custom Background Image using Streamlit HTML Injection
-# Custom CSS Styling (Modern Deep Slate Background Color)
 st.markdown("""
     <style>
-    /* Deep Slate Background */
     .stApp {
         background-color: #0f172a !important;
     }
     
-    /* Modern KPI Metric Cards Styling */
     .metric-card {
         background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -60,7 +52,6 @@ st.markdown("""
         font-weight: 600;
     }
 
-    /* Header Title Styling */
     .main-title {
         background: linear-gradient(90deg, #ff4b4b 0%, #ff8c42 100%);
         -webkit-background-clip: text;
@@ -70,13 +61,11 @@ st.markdown("""
         margin-bottom: 0px;
     }
 
-    /* Sidebar Background & Border */
     [data-testid="stSidebar"] {
         background-color: #0b1120;
         border-right: 1px solid rgba(255, 255, 255, 0.08);
     }
     
-    /* Sidebar Header Box */
     .sidebar-header {
         background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
         border: 1px solid rgba(255, 75, 75, 0.2);
@@ -104,14 +93,11 @@ st.markdown("""
 
 st.set_page_config(page_title="Ride-Share Surge & Fraud Dashboard", layout="wide")
 
-# Header & Modern Title
 st.markdown('<h1 class="main-title">Real-Time Ride-Share Engine</h1>', unsafe_allow_html=True)
 st.caption("Live Surge Pricing, Fraud Detection & Geospatial Driver Matching Platform")
 
 st.markdown("---")
 
-# KPI Summary Cards (Dashboard එක ලස්සනට පෙනීමට)
-# Custom KPI Cards Layout
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
@@ -167,7 +153,6 @@ if "surge_history" not in st.session_state:
 
 
 with st.sidebar:
-    # 1. අලංකාර Logo සහ Title එක සහිත Header කොටස
     st.markdown("""
         <div class="sidebar-header">
             <span style="font-size: 2.2rem;">🚗</span>
@@ -176,9 +161,8 @@ with st.sidebar:
         </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("### ⚙️ System Configuration")
-    
-    # 2. FastAPI URL Input එක මෙතැනට දෙන්න (පැරණි st.sidebar.text_input වෙනුවට)
+    st.markdown("### System Configuration")
+   
     api_url = st.text_input("FastAPI Base URL", value="http://127.0.0.1:8000")
     
     st.markdown("---")
@@ -188,7 +172,6 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("<div style='text-align: center; color: #64748b; font-size: 0.8rem;'>SLTC Cloud Computing Project</div>", unsafe_allow_html=True)
 
-# ටැබ් 5 නිවැරදිව නිර්මාණය කිරීම
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "Driver Ping & Map", 
     "Surge Calculator", 
@@ -401,7 +384,6 @@ with tab5:
                         pitch=0
                     )
 
-                    # Carto Free Tile Style - මෙයින් පාරවල් සහ නගර නාම පැහැදිලිව දිස්වේ
                     r = pdk.Deck(
                         layers=[layer],
                         initial_view_state=view_state,
